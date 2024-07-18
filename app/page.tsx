@@ -1,23 +1,18 @@
+'use client'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { useModal } from '@/stores/use-modal-store'
 
 export default function Home() {
+  const { onOpen } = useModal()
+
+  const handleModalOpen = () => {
+    onOpen('create')
+  }
+
   return (
     <div>
       This is Home page
-      <Button variant="outline">open modal</Button>
-      <Dialog>
-        <DialogTrigger>Open</DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your account
-              and remove your data from our servers.
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
+      <Button variant="outline" onClick={handleModalOpen}>open modal</Button>
     </div>
   )
 }

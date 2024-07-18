@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { ModalProvider } from '@/components/providers/modal-provider'
 
 export const metadata: Metadata = {
   title: 'Baby Time Machine',
@@ -12,8 +13,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>{children}</body>
+      <ModalProvider />
     </html>
   )
 }
