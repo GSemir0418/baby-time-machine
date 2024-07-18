@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useModal } from '@/stores/use-modal-store'
+import axios from 'axios'
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024
 const ACCEPTED_IMAGE_TYPES = [
@@ -32,7 +33,7 @@ const formSchema = z.object({
   desc: z.string(),
 })
 
-interface Props {}
+interface Props { }
 export const UploadFileModal: React.FC<Props> = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const { isOpen, onClose } = useModal()
@@ -44,9 +45,17 @@ export const UploadFileModal: React.FC<Props> = () => {
       desc: '',
     },
   })
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values)
+    const formData = new FormData()
+    formData.append('pic', values.pic[0])
+    formData.append('desc', values.desc)
+    axios.post("http://localhost:3000/api/upload", formData)
+      .then(res => { console.log(res) })
+      .catch(err => console.log(err))
   }
+
   const handleClose = () => {
     setSelectedImage(null)
     form.reset()
