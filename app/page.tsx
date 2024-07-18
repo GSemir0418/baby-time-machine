@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div>
       This is Home page
-      <Button variant="outline" onClick={handleModalOpen}>open modal</Button>
+      <Button variant="outline" onClick={handleModalOpen}>上传照片</Button>
     </div>
   )
 }
