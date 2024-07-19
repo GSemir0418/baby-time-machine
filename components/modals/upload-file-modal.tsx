@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useModal } from '@/stores/use-modal-store'
-import axios from 'axios'
 import ExifReader from 'exifreader';
 import { upload } from '@/services/upload'
 
