@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { ModalProvider } from '@/components/providers/modal-provider'
+import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'Baby Time Machine',
@@ -14,7 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Footer />
+      </body>
       <ModalProvider />
     </html>
   )

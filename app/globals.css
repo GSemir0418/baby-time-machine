@@ -2,3 +2,6 @@
 @tailwind components;
 @tailwind utilities;
   
+html, body, :root {
+  @apply h-screen box-border p-0 m-0
+}

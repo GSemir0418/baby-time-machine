@@ -88,7 +88,7 @@ export const UploadFileModal: React.FC<Props> = () => {
           <DialogTitle>上传照片</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="pic"
@@ -121,7 +121,7 @@ export const UploadFileModal: React.FC<Props> = () => {
                       />
                       <label
                         htmlFor="fileInput"
-                        className="text-neutral-90 rounded-md cursor-pointer inline-flex items-center"
+                        className="text-neutral-90 rounded-md cursor-pointer flex items-center"
                       >
                         <span className="whitespace-nowrap">
                           选择照片
@@ -151,7 +151,7 @@ export const UploadFileModal: React.FC<Props> = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isLoading}>保存</Button>
+            <Button type="submit" className="w-full sm:w-24 mt-2" disabled={isLoading}>保存</Button>
           </form>
         </Form>
       </DialogContent>
