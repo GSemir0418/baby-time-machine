@@ -25,7 +25,10 @@ export async function POST(req: Request) {
       buffer,
     )
 
-    // TODO：将图片路径和描述存储到数据库
+    // 生成预览图
+    
+
+    // TODO：将图片路径\描述\EXIF存储到数据库
 
     const resource = {
       // 返回预览路径

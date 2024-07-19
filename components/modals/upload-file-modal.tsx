@@ -9,8 +9,9 @@ import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useModal } from '@/stores/use-modal-store'
 import axios from 'axios'
+import ExifReader from 'exifreader';
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024
+const MAX_FILE_SIZE = 20 * 1024 * 1024
 const ACCEPTED_IMAGE_TYPES = [
   'image/jpeg',
   'image/jpg',
@@ -28,7 +29,7 @@ const formSchema = z.object({
       message: '仅支持 .jpg, .jpeg, .png .webp 类型',
     })
     .refine(files => files?.[0]?.size <= MAX_FILE_SIZE, {
-      message: `文件尺寸不能超过 10MB.`,
+      message: `文件尺寸不能超过 20MB.`,
     }),
   desc: z.string(),
 })
@@ -46,14 +47,23 @@ export const UploadFileModal: React.FC<Props> = () => {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
-    const formData = new FormData()
-    formData.append('pic', values.pic[0])
-    formData.append('desc', values.desc)
-    axios.post("http://localhost:3000/api/upload", formData)
-      .then(res => { console.log(res) })
-      .catch(err => console.log(err))
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      console.log(values)
+      const file = values.pic[0]
+      const tags = await ExifReader.load(file as File)
+      const exifJson = JSON.stringify(tags)
+
+      const formData = new FormData()
+      formData.append('pic', values.pic[0])
+      formData.append('desc', values.desc)
+      formData.append('exifJson', exifJson)
+
+      await axios.post("http://localhost:3000/api/upload", formData)
+    } catch (err) {
+      console.log(err)
+    }
+
   }
 
   const handleClose = () => {
