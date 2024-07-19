@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useModal } from '@/stores/use-modal-store'
 import ExifReader from 'exifreader';
 import { upload } from '@/services/upload'
+import { useRouter } from 'next/navigation'
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024
 const ACCEPTED_IMAGE_TYPES = [
@@ -37,7 +38,10 @@ const formSchema = z.object({
 interface Props { }
 export const UploadFileModal: React.FC<Props> = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
-  const { isOpen, onClose } = useModal()
+  const { isOpen, type, onClose } = useModal()
+  const router = useRouter()
+
+  const open = isOpen && type === 'create'
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,6 +50,8 @@ export const UploadFileModal: React.FC<Props> = () => {
       desc: '',
     },
   })
+
+  const isLoading = form.formState.isSubmitting
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -60,6 +66,9 @@ export const UploadFileModal: React.FC<Props> = () => {
       formData.append('exifJson', exifJson)
 
       await upload(formData)
+
+      handleClose()
+      router.refresh()
     } catch (err) {
       console.log(err)
     }
@@ -73,10 +82,10 @@ export const UploadFileModal: React.FC<Props> = () => {
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent>
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent className='w-3/4 sm:w-full'>
         <DialogHeader>
-          <DialogTitle>上传图片</DialogTitle>
+          <DialogTitle>上传照片</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -96,7 +105,7 @@ export const UploadFileModal: React.FC<Props> = () => {
                     </div>
                   )}
                   <FormControl>
-                    <Button size="lg" type="button" variant="outline" className="ml-2">
+                    <Button disabled={isLoading} type="button" variant="outline" className="ml-2">
                       <input
                         type="file"
                         className="hidden"
@@ -128,10 +137,13 @@ export const UploadFileModal: React.FC<Props> = () => {
               control={form.control}
               name="desc"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>描述</FormLabel>
+                <FormItem className='flex flex-row items-baseline'>
+                  <FormLabel className='flex-shrink-0'>描述</FormLabel>
                   <FormControl>
                     <Input
+                      autoComplete='off'
+                      className='flex-1 ml-2 mt-0'
+                      disabled={isLoading}
                       placeholder="一句话描述下照片吧"
                       {...field}
                     />
@@ -139,7 +151,7 @@ export const UploadFileModal: React.FC<Props> = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={isLoading}>保存</Button>
           </form>
         </Form>
       </DialogContent>
