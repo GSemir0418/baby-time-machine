@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useModal } from '@/stores/use-modal-store'
 import axios from 'axios'
 import ExifReader from 'exifreader';
+import { upload } from '@/services/upload'
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024
 const ACCEPTED_IMAGE_TYPES = [
@@ -59,7 +60,7 @@ export const UploadFileModal: React.FC<Props> = () => {
       formData.append('desc', values.desc)
       formData.append('exifJson', exifJson)
 
-      await axios.post("http://localhost:3000/api/upload", formData)
+      await upload(formData)
     } catch (err) {
       console.log(err)
     }
