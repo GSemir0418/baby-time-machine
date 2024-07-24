@@ -45,5 +45,6 @@
     "scss",
     "pcss",
     "postcss"
-  ]
+  ],
+  "files.autoSave": "onFocusChange",
 }
