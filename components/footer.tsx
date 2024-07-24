@@ -1,27 +1,49 @@
 'use client'
-import { cn } from "@/lib/utils";
-import { useModal } from "@/stores/use-modal-store";
-import { usePathname, useRouter } from "next/navigation";
-import { FaPlus } from "react-icons/fa6";
+import { usePathname, useRouter } from 'next/navigation'
+import { FaPlus } from 'react-icons/fa6'
+import { BiNews, BiPhotoAlbum, BiTimeFive, BiUser } from 'react-icons/bi'
+import { useModal } from '@/stores/use-modal-store'
+import { cn } from '@/lib/utils'
 
-const routesMap = {
-  timeLine: '/time-line',
-  home: '/'
+interface FooterItemProps {
+  title: keyof typeof iconTitleMap
+  route: string
 }
 
-export const Footer = () => {
-  const { onOpen } = useModal()
+const iconTitleMap = {
+  首页: BiPhotoAlbum,
+  时间轴: BiTimeFive,
+  动态: BiNews,
+  我的: BiUser,
+} as const
+
+const FooterItem: React.FC<FooterItemProps> = ({ title, route }) => {
   const pathname = usePathname()
   const router = useRouter()
 
-  const handleModalOpen = () => {
-    onOpen('create')
+  const handleRouter = (route: string) => {
+    if (pathname !== route) {
+      router.push(route)
+    }
   }
 
-  const handleRouter = (route: keyof typeof routesMap) => {
-    if (pathname !== routesMap[route]) {
-      router.push(routesMap[route])
-    }
+  const Icon = iconTitleMap[title]
+
+  return (
+    <div
+      className={cn('flex-1 flex flex-row flex-nowrap justify-center items-center', { 'font-bold text-pink-300': pathname === route })}
+      onClick={() => handleRouter(route)}
+    >
+      <Icon className='inline mr-1'/>{title}
+    </div>
+  )
+}
+
+export function Footer() {
+  const { onOpen } = useModal()
+
+  const handleModalOpen = () => {
+    onOpen('create')
   }
 
   return (
@@ -31,12 +53,8 @@ export const Footer = () => {
         flex flex-row justify-between items-center
       "
     >
-      <div
-        className={cn("flex-1 text-center", {"text-lg font-bold text-pink-300": pathname===routesMap.home})}
-        onClick={() => handleRouter('home')}
-      >
-        首页
-      </div>
+      <FooterItem title="首页" route="/" />
+      <FooterItem title="时间轴" route="/time-line" />
       <div className="flex-1 text-center">
         <div
           className="
@@ -48,12 +66,8 @@ export const Footer = () => {
           <button className="bg-pink-300 shadow-xl rounded-full w-[80%] h-[80%] flex justify-center items-center" onClick={handleModalOpen}><FaPlus size={20} /></button>
         </div>
       </div>
-      <div
-        className={cn("flex-1 text-center", {"text-lg font-bold text-pink-300": pathname===routesMap.timeLine})}
-        onClick={() => handleRouter('timeLine')}
-      >
-        时间轴
-      </div>
+      <FooterItem title="动态" route="/news" />
+      <FooterItem title="我的" route="/me" />
     </div>
   )
 }

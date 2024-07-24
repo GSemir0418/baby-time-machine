@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "eslint . --fix",
     "prisma:format": "npx prisma format",
     "prisma:generate": "npx prisma generate",
     "prisma:dev": "npx prisma migrate dev",
