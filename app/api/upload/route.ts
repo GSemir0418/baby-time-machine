@@ -46,7 +46,7 @@ export async function POST(req: Request) {
         url,
         thumb_url,
         exif: exifJson as string,
-        desc: desc as string
+        desc: desc as string,
       },
     })
 

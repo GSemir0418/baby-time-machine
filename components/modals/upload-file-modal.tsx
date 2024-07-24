@@ -3,14 +3,14 @@ import React, { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import ExifReader from 'exifreader'
+import { useRouter } from 'next/navigation'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useModal } from '@/stores/use-modal-store'
-import ExifReader from 'exifreader';
 import { upload } from '@/services/upload'
-import { useRouter } from 'next/navigation'
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024
 const ACCEPTED_IMAGE_TYPES = [
@@ -69,10 +69,10 @@ export const UploadFileModal: React.FC<Props> = () => {
 
       handleClose()
       router.refresh()
-    } catch (err) {
+    }
+    catch (err) {
       console.log(err)
     }
-
   }
 
   const handleClose = () => {
@@ -83,7 +83,7 @@ export const UploadFileModal: React.FC<Props> = () => {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='w-3/4 sm:w-full'>
+      <DialogContent className="w-3/4 sm:w-full">
         <DialogHeader>
           <DialogTitle>上传照片</DialogTitle>
         </DialogHeader>
@@ -137,12 +137,12 @@ export const UploadFileModal: React.FC<Props> = () => {
               control={form.control}
               name="desc"
               render={({ field }) => (
-                <FormItem className='flex flex-row items-baseline'>
-                  <FormLabel className='flex-shrink-0'>描述</FormLabel>
+                <FormItem className="flex flex-row items-baseline">
+                  <FormLabel className="flex-shrink-0">描述</FormLabel>
                   <FormControl>
                     <Input
-                      autoComplete='off'
-                      className='flex-1 ml-2 mt-0'
+                      autoComplete="off"
+                      className="flex-1 ml-2 mt-0"
                       disabled={isLoading}
                       placeholder="一句话描述下照片吧"
                       {...field}
