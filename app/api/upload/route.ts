@@ -1,3 +1,5 @@
+/* eslint-disable node/prefer-global/buffer */
+/* eslint-disable node/prefer-global/process */
 import { writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { NextResponse } from 'next/server'
@@ -41,7 +43,7 @@ export async function POST(req: Request) {
       .toFile(fileThumbPath)
 
     // 将图片路径\描述\EXIF存储到数据库
-    const img = await db.images.create({
+    const img = await db.image.create({
       data: {
         url,
         thumb_url,
