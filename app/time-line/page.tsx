@@ -39,20 +39,20 @@ const TimeLinePage: React.FC<Props> = async () => {
         create_time,
         DATE_TRUNC('month', create_time) AS month
       FROM
-        "images"
+        "Image"
     ) AS subquery
     GROUP BY month
     ORDER BY month desc
   `
   return (
-    <div>
+    <>
       {groupMediaByMonth.length === 0
-        ? (<h3>暂无数据</h3>)
+        ? (<h3 className='text-zinc-500 absolute left-[20%] top-10'>暂时没有照片哦，先上传一张吧~</h3>)
         : groupMediaByMonth.map(group => (
           <TimeLineItem key={group.month.getTime()} group={group} />
         ),
         )}
-    </div>
+    </>
   )
 }
 export default TimeLinePage
