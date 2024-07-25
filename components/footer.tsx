@@ -34,7 +34,8 @@ const FooterItem: React.FC<FooterItemProps> = ({ title, route }) => {
       className={cn('flex-1 flex flex-row flex-nowrap justify-center items-center', { 'font-bold text-pink-300': pathname === route })}
       onClick={() => handleRouter(route)}
     >
-      <Icon className='inline mr-1'/>{title}
+      <Icon className="inline mr-1" />
+      {title}
     </div>
   )
 }
@@ -42,8 +43,11 @@ const FooterItem: React.FC<FooterItemProps> = ({ title, route }) => {
 export function Footer() {
   const { onOpen } = useModal()
 
+  const router = useRouter()
   const handleModalOpen = () => {
-    onOpen('create')
+
+    router.push('/post/new')
+    // onOpen('create')
   }
 
   return (

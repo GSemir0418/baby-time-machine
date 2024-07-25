@@ -5,12 +5,12 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import ExifReader from 'exifreader'
 import { useRouter } from 'next/navigation'
+import axios from 'axios'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useModal } from '@/stores/use-modal-store'
-import { upload } from '@/services/upload'
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024
 const ACCEPTED_IMAGE_TYPES = [
@@ -53,9 +53,14 @@ export const UploadFileModal: React.FC<Props> = () => {
 
   const isLoading = form.formState.isSubmitting
 
+  const handleClose = () => {
+    setSelectedImage(null)
+    form.reset()
+    onClose()
+  }
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      console.log(values)
       const file = values.pic[0]
       const tags = await ExifReader.load(file as File)
       const exifJson = JSON.stringify(tags)
@@ -65,7 +70,7 @@ export const UploadFileModal: React.FC<Props> = () => {
       formData.append('desc', values.desc)
       formData.append('exifJson', exifJson)
 
-      await upload(formData)
+      await axios.post('/api/upload', formData)
 
       handleClose()
       router.refresh()
@@ -73,12 +78,6 @@ export const UploadFileModal: React.FC<Props> = () => {
     catch (err) {
       console.log(err)
     }
-  }
-
-  const handleClose = () => {
-    setSelectedImage(null)
-    form.reset()
-    onClose()
   }
 
   return (
