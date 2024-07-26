@@ -69,7 +69,7 @@ export const PostForm: React.FC<Props> = () => {
 
       await axios.post('/api/post', formData)
 
-      router.refresh()
+      router.push('/post')
     }
     catch (err) {
       console.log(err)

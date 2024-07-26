@@ -2,7 +2,6 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { FaPlus } from 'react-icons/fa6'
 import { BiNews, BiPhotoAlbum, BiTimeFive, BiUser } from 'react-icons/bi'
-// import { useModal } from '@/stores/use-modal-store'
 import { cn } from '@/lib/utils'
 
 interface FooterItemProps {
@@ -41,13 +40,11 @@ const FooterItem: React.FC<FooterItemProps> = ({ title, route }) => {
 }
 
 export function Footer() {
-  // const { onOpen } = useModal()
-
   const router = useRouter()
   const handleModalOpen = () => {
 
-    router.push('/post/new')
-    // onOpen('create')
+    // router.push('/post/new')
+    router.push('/upload')
   }
 
   return (
