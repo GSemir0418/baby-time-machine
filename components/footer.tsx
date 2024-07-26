@@ -2,7 +2,7 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { FaPlus } from 'react-icons/fa6'
 import { BiNews, BiPhotoAlbum, BiTimeFive, BiUser } from 'react-icons/bi'
-import { useModal } from '@/stores/use-modal-store'
+// import { useModal } from '@/stores/use-modal-store'
 import { cn } from '@/lib/utils'
 
 interface FooterItemProps {
@@ -41,7 +41,7 @@ const FooterItem: React.FC<FooterItemProps> = ({ title, route }) => {
 }
 
 export function Footer() {
-  const { onOpen } = useModal()
+  // const { onOpen } = useModal()
 
   const router = useRouter()
   const handleModalOpen = () => {
@@ -70,7 +70,7 @@ export function Footer() {
           <button className="bg-pink-300 shadow-xl rounded-full w-[80%] h-[80%] flex justify-center items-center" onClick={handleModalOpen}><FaPlus size={20} /></button>
         </div>
       </div>
-      <FooterItem title="动态" route="/news" />
+      <FooterItem title="动态" route="/post" />
       <FooterItem title="我的" route="/me" />
     </div>
   )
