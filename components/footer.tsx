@@ -43,8 +43,8 @@ export function Footer() {
   const router = useRouter()
   const handleModalOpen = () => {
 
-    // router.push('/post/new')
-    router.push('/upload')
+    router.push('/post/new')
+    // router.push('/upload')
   }
 
   return (
@@ -64,7 +64,7 @@ export function Footer() {
             active:shadow-inner
           "
         >
-          <button className="bg-pink-300 shadow-xl rounded-full w-[80%] h-[80%] flex justify-center items-center" onClick={handleModalOpen}><FaPlus size={20} /></button>
+          <button className="bg-pink-300 shadow-xl rounded-full w-[80%] h-[80%] flex justify-center items-center" onClick={handleModalOpen}><FaPlus size={20} className='text-white' /></button>
         </div>
       </div>
       <FooterItem title="动态" route="/post" />

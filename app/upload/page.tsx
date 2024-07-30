@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import ExifReader from 'exifreader'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
+import { MdCancel } from 'react-icons/md'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -75,7 +76,7 @@ const UploadPage: React.FC<Props> = () => {
   }
 
   return (
-    <div className="h-full m-10">
+    <div className="h-full m-8">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
@@ -85,38 +86,50 @@ const UploadPage: React.FC<Props> = () => {
               <FormItem>
                 <FormLabel>照片</FormLabel>
                 {selectedImage && (
-                  <div className="max-w-[200px] ml-2">
+                  <span className="relative">
+                    <MdCancel
+                      size={30}
+                      color="#ef4444"
+                      onClick={() => {
+                        field.onChange(undefined)
+                        setSelectedImage(null)
+
+                      }}
+                      className="absolute -right-[10px] top-[11px]"
+                    />
                     <img
-                      className="rounded-md"
+                      className="rounded-md mt-1"
                       src={URL.createObjectURL(selectedImage)}
                       alt="Selected"
                     />
-                  </div>
+                  </span>
                 )}
                 <FormControl>
-                  <Button disabled={isLoading} type="button" variant="outline" className="ml-2">
-                    <input
-                      type="file"
-                      className="hidden"
-                      id="fileInput"
-                      accept="image/*"
-                      onBlur={field.onBlur}
-                      name={field.name}
-                      onChange={(e) => {
-                        field.onChange(e.target.files)
-                        setSelectedImage(e.target.files?.[0] || null)
-                      }}
-                      ref={field.ref}
-                    />
-                    <label
-                      htmlFor="fileInput"
-                      className="text-neutral-90 rounded-md cursor-pointer flex items-center"
-                    >
-                      <span className="whitespace-nowrap">
-                        选择照片
-                      </span>
-                    </label>
-                  </Button>
+                  {!selectedImage && (
+                    <Button disabled={isLoading} type="button" variant="outline" className="ml-2">
+                      <input
+                        type="file"
+                        className="hidden"
+                        id="fileInput"
+                        accept="image/*"
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        onChange={(e) => {
+                          field.onChange(e.target.files)
+                          setSelectedImage(e.target.files?.[0] || null)
+                        }}
+                        ref={field.ref}
+                      />
+                      <label
+                        htmlFor="fileInput"
+                        className="text-neutral-90 rounded-md cursor-pointer flex items-center"
+                      >
+                        <span className="whitespace-nowrap">
+                          选择照片
+                        </span>
+                      </label>
+                    </Button>
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -126,7 +139,7 @@ const UploadPage: React.FC<Props> = () => {
             control={form.control}
             name="desc"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-baseline">
+              <FormItem className="flex flex-row items-baseline mt-4">
                 <FormLabel className="flex-shrink-0">描述</FormLabel>
                 <FormControl>
                   <Input
@@ -140,7 +153,7 @@ const UploadPage: React.FC<Props> = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full sm:w-24 mt-2" disabled={isLoading}>保存</Button>
+          <Button type="submit" className="bg-pink-300 w-full mt-6" disabled={isLoading}>保存</Button>
         </form>
       </Form>
     </div>

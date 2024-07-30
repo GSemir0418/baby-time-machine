@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import ExifReader from 'exifreader'
+import { MdCancel } from 'react-icons/md'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
@@ -81,78 +82,30 @@ export const PostForm: React.FC<Props> = () => {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
-          name="images"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>照片</FormLabel>
-              {selectedImages && (
-                <div className="max-w-[200px] ml-2">
-                  {selectedImages.map((img, i) => (
-                    <img
-                      key={i}
-                      className="rounded-md"
-                      src={URL.createObjectURL(img)}
-                      alt="Selected"
-                    />
-                  ))}
-                </div>
-              )}
-              <FormControl>
-                <Button disabled={isLoading} type="button" variant="outline" className="ml-2">
-                  <input
-                    type="file"
-                    multiple
-                    className="hidden"
-                    id="fileInput"
-                    accept="image/*"
-                    onBlur={field.onBlur}
-                    name={field.name}
-                    onChange={(e) => {
-                      console.log('e.target', e.target.files)
-                      if (e.target.files) {
-                        field.onChange(e.target.files)
-                        setSelectedImages(Array.from(e.target.files) || null)
-                      }
-                    }}
-                    ref={field.ref}
-                  />
-                  <label
-                    htmlFor="fileInput"
-                    className="text-neutral-90 rounded-md cursor-pointer flex items-center"
-                  >
-                    <span className="whitespace-nowrap">
-                      选择照片
-                    </span>
-                  </label>
-                </Button>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="content"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-baseline">
-              <FormLabel className="flex-shrink-0">描述</FormLabel>
-              <FormControl>
-                <Input
-                  autoComplete="off"
-                  className="flex-1 ml-2 mt-0"
-                  disabled={isLoading}
-                  placeholder="记录这一重要时刻"
-                  {...field}
-                />
-              </FormControl>
-            </FormItem>
+            <>
+              <FormItem className="flex flex-row items-baseline mt-4">
+                <FormLabel className="flex-shrink-0">描述</FormLabel>
+                <FormControl>
+                  <Input
+                    autoComplete="off"
+                    className="flex-1 ml-2 mt-0"
+                    disabled={isLoading}
+                    placeholder="记录这一重要时刻"
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+              <FormMessage className="block" />
+            </>
           )}
         />
         <FormField
           control={form.control}
           name="role"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-baseline">
+            <FormItem className="flex flex-row items-baseline mt-4">
               <FormLabel className="flex-shrink-0">角色</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
@@ -168,7 +121,80 @@ export const PostForm: React.FC<Props> = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full sm:w-24 mt-2" disabled={isLoading}>保存</Button>
+        <FormField
+          control={form.control}
+          name="images"
+          render={({ field }) => (
+            <FormItem className="mt-4">
+              <FormLabel>照片</FormLabel>
+              <FormControl>
+                <Button disabled={isLoading} type="button" variant="outline" className="ml-2">
+                  <input
+                    type="file"
+                    multiple
+                    className="hidden"
+                    id="fileInput"
+                    accept="image/*"
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    onChange={(e) => {
+                      if (e.target.files) {
+                        field.onChange(e.target.files)
+                        setSelectedImages(Array.from(e.target.files)?.slice(0, 9) || null)
+                      }
+                    }}
+                    ref={field.ref}
+                  />
+                  <label
+                    htmlFor="fileInput"
+                    className="text-neutral-90 rounded-md cursor-pointer flex items-center"
+                  >
+                    <span className="whitespace-nowrap">
+                      选择照片
+                    </span>
+                  </label>
+                </Button>
+              </FormControl>
+              <FormMessage />
+              {selectedImages && (
+                <div className="grid grid-cols-3 gap-1 pt-2">
+                  {selectedImages.map((img, i) => (
+                    <span className="relative">
+                      <MdCancel
+                        size={20}
+                        color="#ef4444"
+                        onClick={() => {
+                          // 移除 FileList 对应的图片，以及预览图
+                          const inputFileList: FileList = form.getValues('images')
+                          const fileArray = Array.from(inputFileList)
+                          fileArray.splice(i, 1)
+                          const dataTransfer = new DataTransfer()
+                          fileArray.forEach((file) => {
+                            dataTransfer.items.add(file)
+                          })
+                          field.onChange(dataTransfer.files)
+                          // 移除预览图
+                          setSelectedImages((prev) => {
+                            prev?.splice(i, 1)
+                            return prev
+                          })
+                        }}
+                        className="absolute -right-[6px] -top-[6px]"
+                      />
+                      <img
+                        key={i}
+                        className="rounded-md"
+                        src={URL.createObjectURL(img)}
+                        alt="Selected"
+                      />
+                    </span>
+                  ))}
+                </div>
+              )}
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="bg-pink-300 w-full mt-6" disabled={isLoading}>保存</Button>
       </form>
     </Form>
   )
