@@ -1,18 +1,21 @@
 import React from 'react'
 import { FaRegDotCircle } from 'react-icons/fa'
 import dayjs from 'dayjs'
-import type { GroupMedia } from '@/app/time-line/page'
+import type { GroupBy, GroupMedia } from '@/next-env'
 
 interface Props {
-  group: GroupMedia
+  groupBy: GroupBy
+  group: GroupMedia<Props['groupBy']>
 }
-export const TimeLineItem: React.FC<Props> = ({ group }) => {
-  const month = dayjs(group.month).format('YYYY-MM')
+
+export const TimeLineItem: React.FC<Props> = ({ group, groupBy }) => {
+  const title = dayjs(group[groupBy]).format(groupBy === 'month' ? 'YYYY-MM' : 'YYYY')
   return (
-    <div className="border-b w-full h-28 flex items-center p-2">
-      <FaRegDotCircle className='block mr-2 mt-4'/>
+    <div className="relative border-b w-full h-28 flex items-center p-2">
+      <span className='absolute top-0 left-4 h-full w-[1px] bg-pink-200 -z-10'/>
+      <FaRegDotCircle className="block mr-2 mt-4" color='#f9a8d4' />
       <div className="flex-1 flex flex-col">
-        <span className='text-zinc-500'>{month}</span>
+        <span className="text-zinc-500">{title}</span>
         <div className="flex-1 grid grid-cols-3 gap-1 grid-rows-1">
           {group.items.map((i, index) => (
             index < 3 && <img key={i.id} src={i.thumbUrl} className="rounded-md h-20 w-full" />
