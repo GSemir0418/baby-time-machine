@@ -1,9 +1,11 @@
+'use client'
 import React from 'react'
-import { db } from '@/lib/db'
+import useSWR from 'swr'
+import axios from 'axios'
 import { TimeLineItem } from '@/components/time-line-item'
 
 export interface GroupMedia {
-  month: Date
+  month: string
   items: {
     id: string
     thumbUrl: string
@@ -12,44 +14,25 @@ export interface GroupMedia {
 }
 
 interface Props { }
-const TimeLinePage: React.FC<Props> = async () => {
-  // const groupMediaByMonth = await db.$queryRaw`
-  //   SELECT *
-  //   FROM (
-  //     SELECT
-  //       id,
-  //       thumb_url,
-  //       create_time,
-  //       DATE_TRUNC('month', create_time) AS month,
-  //       ROW_NUMBER() OVER (PARTITION BY DATE_TRUNC('month', create_time) ORDER BY create_time) AS row_num
-  //     FROM
-  //       "images"
-  //   ) AS subquery
-  //   WHERE row_num <= 3
-  //   ORDER BY month, create_time;
-  // `
-  const groupMediaByMonth: GroupMedia[] = await db.$queryRaw`
-    SELECT 
-      month,
-      json_agg(json_build_object('id', id, 'thumbUrl', thumb_url, 'createTime', create_time)) AS items 
-    FROM (
-      SELECT
-        id,
-        thumb_url,
-        create_time,
-        DATE_TRUNC('month', create_time) AS month
-      FROM
-        "Image"
-    ) AS subquery
-    GROUP BY month
-    ORDER BY month desc
-  `
+const TimeLinePage: React.FC<Props> = () => {
+  const { data, isLoading, error } = useSWR(
+    '/api/media/group',
+    () => axios.get<{ resource: GroupMedia[] }>('/api/media/group'),
+  )
+
+  console.log(data)
+
+  if (error)
+    return <div>出错了</div>
+  if (isLoading)
+    return <div>加载中...</div>
+
   return (
     <>
-      {groupMediaByMonth.length === 0
-        ? (<h3 className='text-zinc-500 absolute left-[20%] top-10'>暂时没有照片哦，先上传一张吧~</h3>)
-        : groupMediaByMonth.map(group => (
-          <TimeLineItem key={group.month.getTime()} group={group} />
+      {data?.data.resource.length === 0
+        ? (<h3 className="text-zinc-500 absolute left-[20%] top-10">暂时没有照片哦，先上传一张吧~</h3>)
+        : data?.data.resource.map(group => (
+          <TimeLineItem key={group.month} group={group} />
         ),
         )}
     </>

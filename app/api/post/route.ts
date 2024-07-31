@@ -5,7 +5,6 @@ import { writeFile } from 'node:fs/promises'
 import { NextResponse } from 'next/server'
 import { v4 as uuidv4 } from 'uuid'
 import sharp from 'sharp'
-import ExifReader from 'exifreader'
 import { db } from '@/lib/db'
 
 export async function POST(req: Request) {
@@ -38,7 +37,7 @@ export async function POST(req: Request) {
 
     for (let i = 0; i < imageArr.length; i++) {
       const image = imageArr[i]
-      const exifJson = exifJsonArr?.[i] ?? ""
+      const exifJson = exifJsonArr?.[i] ?? ''
       // 处理保存路径
       const buffer = Buffer.from(await image.arrayBuffer())
 
@@ -75,6 +74,21 @@ export async function POST(req: Request) {
   }
   catch (error) {
     console.log('Error occured ', error)
+    return NextResponse.json({ error: 'Internal Error', status: 500 })
+  }
+}
+
+export async function GET(req: Request) {
+  try {
+    const posts = await db.post.findMany({
+      include: {
+        images: true,
+      },
+    })
+    return NextResponse.json({ resources: { items: posts }, status: 200 })
+  }
+  catch (err) {
+    console.log('[ERROR]', err)
     return NextResponse.json({ error: 'Internal Error', status: 500 })
   }
 }
