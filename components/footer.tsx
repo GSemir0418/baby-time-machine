@@ -1,7 +1,8 @@
 'use client'
 import { usePathname, useRouter } from 'next/navigation'
-import { FaPlus } from 'react-icons/fa6'
 import { BiNews, BiPhotoAlbum, BiTimeFive, BiUser } from 'react-icons/bi'
+import { useEffect, useState } from 'react'
+import { FooterAddMenu } from './footer-add-menu'
 import { cn } from '@/lib/utils'
 
 interface FooterItemProps {
@@ -40,12 +41,14 @@ const FooterItem: React.FC<FooterItemProps> = ({ title, route }) => {
 }
 
 export function Footer() {
-  const router = useRouter()
-  const handleModalOpen = () => {
+  const [isMounted, setIsMounted] = useState(false)
 
-    router.push('/post/new')
-    // router.push('/upload')
-  }
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted)
+    return null
 
   return (
     <div
@@ -56,17 +59,7 @@ export function Footer() {
     >
       <FooterItem title="首页" route="/" />
       <FooterItem title="时间轴" route="/time-line" />
-      <div className="flex-1 text-center">
-        <div
-          className="
-            absolute bg-white -translate-x-[50%] left-[50%] bottom-[20%] rounded-full w-12 h-12
-            flex justify-center items-center
-            active:shadow-inner
-          "
-        >
-          <button className="bg-pink-300 shadow-xl rounded-full w-[80%] h-[80%] flex justify-center items-center" onClick={handleModalOpen}><FaPlus size={20} className='text-white' /></button>
-        </div>
-      </div>
+      <FooterAddMenu />
       <FooterItem title="动态" route="/post" />
       <FooterItem title="我的" route="/me" />
     </div>

@@ -16,9 +16,7 @@ export const GroupRadio: React.FC<Props> = ({groupBy, setGroupBy}) => {
       onValueChange={setGroupBy}
     >
       <div className="flex items-center space-x-2">
-        <RadioGroupItem value="year" id="r1" >
-          <RadioGroup.Indicator className="RadioGroupIndicator" />
-        </RadioGroupItem>
+        <RadioGroupItem value="year" id="r1" />
         <Label htmlFor="r1">年</Label>
       </div>
       <div className="flex items-center space-x-2">
