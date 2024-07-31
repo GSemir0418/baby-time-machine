@@ -17,11 +17,17 @@ export async function GET(req: Request) {
         cursor: {
           id: cursor,
         },
+        orderBy: {
+          create_time: 'desc',
+        },
       })
     }
     else {
       images = await db.image.findMany({
         take: MEDIA_BATCH,
+        orderBy: {
+          create_time: 'desc',
+        },
       })
     }
 

@@ -1,6 +1,5 @@
-interface Props { }
-const MePage: React.FC<Props> = () => {
-  return <div>MePage</div>
+const MePage: React.FC = () => {
+  return <div>正在装修中</div>
 }
 
 export default MePage
