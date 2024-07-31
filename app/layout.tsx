@@ -15,10 +15,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-neutral-100 font-['Keai']">
-        <div className='pb-20'>
-          {children}
-        </div>
+      <body className="bg-neutral-100 font-['Keai'] overflow-hidden">
+        {children}
         <Footer />
       </body>
       <ModalProvider />

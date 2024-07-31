@@ -2,64 +2,37 @@ import { NextResponse } from 'next/server'
 import type { Image } from '@prisma/client'
 import { db } from '@/lib/db'
 
-const IMAGES_BATCH = 10
+export const MEDIA_BATCH = 18
 export async function GET(req: Request) {
   try {
-    // const { searchParams } = new URL(req.url)
+    const { searchParams } = new URL(req.url)
 
-    // const cursor = searchParams.get('cursor')
+    const cursor = searchParams.get('cursor')
 
-    const images = await db.image.findMany()
+    let images: Image[]
+    if (cursor) {
+      images = await db.image.findMany({
+        take: MEDIA_BATCH,
+        skip: 1,
+        cursor: {
+          id: cursor,
+        },
+      })
+    }
+    else {
+      images = await db.image.findMany({
+        take: MEDIA_BATCH,
+      })
+    }
 
-    // if (cursor) {
-    // messges = await db.directMessage.findMany({
-    //   take: MESSAGES_BATCH,
-    //   skip: 1,
-    //   cursor: {
-    //     id: cursor,
-    //   },
-    //   where: {
-    //     conversationId,
-    //   },
-    //   include: {
-    //     member: {
-    //       include: {
-    //         profile: true,
-    //       },
-    //     },
-    //   },
-    //   orderBy: {
-    //     createdAt: 'desc',
-    //   },
-    // })
-    // }
-    // else {
-    // messges = await db.directMessage.findMany({
-    //   take: MESSAGES_BATCH,
-    //   where: {
-    //     conversationId,
-    //   },
-    //   include: {
-    //     member: {
-    //       include: {
-    //         profile: true,
-    //       },
-    //     },
-    //   },
-    //   orderBy: {
-    //     createdAt: 'desc',
-    //   },
-    // })
-    // }
-
-    // let nextCursor = null
-    // if (images.length === IMAGES_BATCH)
-    //   nextCursor = images[IMAGES_BATCH - 1].id
+    let nextCursor = null
+    if (images.length === MEDIA_BATCH)
+      nextCursor = images[MEDIA_BATCH - 1].id
 
     return NextResponse.json({
       resources: {
         items: images,
-        // nextCursor,
+        nextCursor,
       },
       status: 200,
     })
