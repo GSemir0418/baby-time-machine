@@ -3,6 +3,7 @@ import axios from 'axios'
 import type { Image } from '@prisma/client'
 import { Loader2 } from 'lucide-react'
 import useSWRInfinite from 'swr/infinite'
+import { useRouter } from 'next/navigation'
 import { MEDIA_BATCH } from './api/media/route'
 
 function getKey(pageIndex: number, previousPageData: { items: Image[], nextCursor: string }) {
@@ -24,6 +25,7 @@ async function fetcher(url: string) {
 }
 
 export default function Home() {
+  const router = useRouter()
   const { data, error, isLoading, size, setSize } = useSWRInfinite(getKey, fetcher)
 
   const isEmpty = data?.[0]?.items.length === 0
@@ -42,7 +44,7 @@ export default function Home() {
           return resources.items.length === 0
             ? <h3 className="absolute text-zinc-500 left-[20%] top-10">暂时没有照片哦，先上传一张吧~</h3>
             : resources.items.map(i => (
-              <img key={i.id} className="rounded-lg" src={i.thumb_url} />
+              <img key={i.id} className="rounded-lg" src={i.thumb_url} onClick={() => { router.push(`media/${i.id}`) }} />
             ))
         })}
       </div>

@@ -21,7 +21,7 @@ export const FooterAddMenu: React.FC = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent side="top" sideOffset={40}>
         <DropdownMenuItem onSelect={() => router.push('/post/new')}>发布动态</DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => router.push('/upload')}>上传照片</DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => router.push('/media/upload')}>上传照片</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
