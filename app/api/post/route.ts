@@ -5,6 +5,7 @@ import { writeFile } from 'node:fs/promises'
 import { NextResponse } from 'next/server'
 import { v4 as uuidv4 } from 'uuid'
 import sharp from 'sharp'
+import type { Post } from '@prisma/client'
 import { db } from '@/lib/db'
 
 export async function POST(req: Request) {
@@ -78,14 +79,46 @@ export async function POST(req: Request) {
   }
 }
 
+export const POSTS_BATCH = 5
 export async function GET(req: Request) {
   try {
-    const posts = await db.post.findMany({
-      include: {
-        images: true,
-      },
-    })
-    return NextResponse.json({ resources: { items: posts }, status: 200 })
+    const { searchParams } = new URL(req.url)
+
+    const cursor = searchParams.get('cursor')
+
+    let posts: Post[]
+    if (cursor) {
+      posts = await db.post.findMany({
+        take: POSTS_BATCH,
+        skip: 1,
+        cursor: {
+          id: cursor,
+        },
+        include: {
+          images: true,
+        },
+        orderBy: {
+          create_time: 'desc'
+        }
+      })
+    }
+    else {
+      posts = await db.post.findMany({
+        take: POSTS_BATCH,
+        include: {
+          images: true,
+        },
+        orderBy: {
+          create_time: 'desc'
+        }
+      })
+    }
+
+    let nextCursor = null
+    if (posts.length === POSTS_BATCH)
+      nextCursor = posts[POSTS_BATCH - 1].id
+
+    return NextResponse.json({ resources: { items: posts, nextCursor }, status: 200 })
   }
   catch (err) {
     console.log('[ERROR]', err)
