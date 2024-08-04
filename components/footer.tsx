@@ -31,10 +31,10 @@ const FooterItem: React.FC<FooterItemProps> = ({ title, route }) => {
 
   return (
     <div
-      className={cn('flex-1 flex flex-row flex-nowrap justify-center items-center', { 'font-bold text-pink-300': pathname === route })}
+      className={cn('flex-1 flex flex-col flex-nowrap justify-center items-center', { 'font-bold text-pink-300': pathname === route })}
       onClick={() => handleRouter(route)}
     >
-      <Icon className="inline mr-1" />
+      <Icon className="inline mr-1" size={20} />
       {title}
     </div>
   )
