@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react'
 import useSWRInfinite from 'swr/infinite'
 import { useRouter } from 'next/navigation'
 import { MEDIA_BATCH } from './api/media/route'
+import { SWRLoading } from '@/components/swr-loading'
 
 function getKey(pageIndex: number, previousPageData: { items: Image[], nextCursor: string }) {
   // 第一页，不传 cursor，正常请求
@@ -35,10 +36,10 @@ export default function Home() {
   if (error)
     return <div>出错了</div>
   if (isLoading)
-    return <div>加载中...</div>
+    return <SWRLoading />
 
   return (
-    <div className="h-full overflow-y-auto pb-14">
+    <div className="h-full overflow-y-auto pb-[80px]">
       <div className="bg-transparent grid grid-cols-3 sm:grid-cols-4 gap-1 p-2">
         {data?.map((resources) => {
           return resources.items.length === 0

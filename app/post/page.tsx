@@ -4,6 +4,7 @@ import axios from 'axios'
 import useSWRInfinite from 'swr/infinite'
 import { Loader2 } from 'lucide-react'
 import { PostItem } from '@/components/post-item'
+import { SWRLoading } from '@/components/swr-loading'
 
 const POSTS_BATCH = 5
 type PostWithImagesType = Post & { images: Image[] }
@@ -35,10 +36,10 @@ function PostsPage() {
   if (error)
     return <div>出错了</div>
   if (isLoading)
-    return <div>加载中...</div>
+    return <SWRLoading />
 
   return (
-    <div className="h-full overflow-y-auto p-2 pb-14">
+    <div className="h-full overflow-y-auto p-2 pb-[80px]">
       {data?.map((resources) => {
         return resources.items.length === 0
           ? <h3 className="absolute text-zinc-500 left-[20%] top-10">暂时没有动态哦，去发布吧~</h3>
