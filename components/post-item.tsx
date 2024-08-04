@@ -36,7 +36,7 @@ export const PostItem: React.FC<Props> = ({ post }) => {
           ))}
         </div>
         <div className="text-sm text-zinc-400">
-          {dayjs(post.create_time).format('YYYY-MM-DD hh:mm')}
+          {dayjs(post.create_time).format('YYYY-MM-DD HH:mm')}
         </div>
       </div>
     </div>
